@@ -103,17 +103,6 @@ function createScriptProcessorPcmRecorderNode({
 }
 
 /**
- * @param {PcmRecorderNodeOptions} options
- * @returns {Promise<{ recorderNode: AudioNode; stop: () => void }>}
- */
-async function createPcmRecorderNode(options) {
-  if (typeof AudioWorkletNode === 'undefined') {
-    return createScriptProcessorPcmRecorderNode(options);
-  }
-  return await createAudioWorkletPcmRecorderNode(options);
-}
-
-/**
  * @param {(data: Float32Array) => void} onData
  * @param {boolean} [useScriptProcessorNode]
  * @returns {Promise<() => void>} stop
