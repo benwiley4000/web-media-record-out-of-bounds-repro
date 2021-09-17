@@ -1,0 +1,43 @@
+<div>
+  <h1>Out of bounds PCM recording values repro</h1>
+  <label>Use recorder node:
+    <select>
+      <option value="AudioWorkletNode" selected>AudioWorkletNode</option>
+      <option value="ScriptProcessorNode">ScriptProcessorNode</option>
+    </select>
+  </label>
+  <button>Start recording</button>
+  <h2>List of samples with greatest magnitude during most recent recording:</h2>
+  <ol></ol>
+</div>
+<script src="recording_utils.js"></script>
+<script>
+  let greatestSamples = [];
+  function addSamplesToOrder(samples) {
+    greatestSamples = [...greatestSamples, ...samples]
+      .sort((a, b) => Math.abs(b) - Math.abs(a))
+      .slice(0, 10);
+    const sampleList = document.querySelector('ol');
+    sampleList.innerHTML = '';
+    for (const sample of greatestSamples) {
+      sampleList.appendChild(document.createElement('li')).innerText = sample;
+    }
+  }
+  let stop;
+  const recordButton = document.querySelector('button');
+  let recording = false;
+  recordButton.addEventListener('click', async () => {
+    if (recording) {
+      stop();
+      recording = false;
+      recordButton.innerText = 'Start recording';
+    } else {
+      greatestSamples = [];
+      recording = true;
+      recordButton.innerText = 'Stop recording';
+      const nodeSelect = document.querySelector('select');
+      const useScriptProcessorNode = nodeSelect.value === 'ScriptProcessorNode';
+      stop = await captureAudio(addSamplesToOrder, useScriptProcessorNode);
+    }
+  });
+</script>

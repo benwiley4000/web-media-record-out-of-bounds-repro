@@ -1,9 +1,0 @@
-{
-  "include": ["./src/**/*"],
-  "compilerOptions": {
-    "checkJs": true,
-    "strict": true,
-    "downlevelIteration": true,
-    "jsx": "react"
-  }
-}
